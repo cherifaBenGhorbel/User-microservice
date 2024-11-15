@@ -11,6 +11,7 @@ import com.cbg.users.service.UserService;
 import com.cbg.users.service.register.RegistrationRequest;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -31,6 +32,11 @@ public class UserRestController {
 	public User register(@RequestBody RegistrationRequest request){
 		return userService.registerUser(request);
 	}
+
+	@GetMapping("/verifyEmail/{token}")
+	 public User verifyEmail(@PathVariable("token") String token){
+			return userService.validateToken(token);
+	 }
 
 	
 }

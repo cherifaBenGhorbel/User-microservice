@@ -69,7 +69,10 @@
 		    <artifactId>java-jwt</artifactId>
 		    <version>3.18.2</version> <!-- Use the latest stable version -->
 		</dependency>
-
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-mail</artifactId>
+    </dependency>
 	</dependencies>
 	<build>
 		<plugins>

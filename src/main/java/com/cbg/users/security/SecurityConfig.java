@@ -22,18 +22,18 @@ import jakarta.servlet.http.HttpServletRequest;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-	@Autowired
-	AuthenticationManager authMgr;
 	
+	@Autowired
+ 	UserDetailsService userDetailsService;
+ 	
  	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
  	
-	@Autowired
- 	UserDetailsService userDetailsService;
+ 	@Autowired
+ 	AuthenticationManager authMgr;
 	
 	
-	@Bean
+ 	@Bean
 	public AuthenticationManager authManager(HttpSecurity http, 
 			BCryptPasswordEncoder bCryptPasswordEncoder, 
 			UserDetailsService userDetailsService) 
@@ -44,31 +44,32 @@ public class SecurityConfig {
 	      .and()
 	      .build();
 	}
-
-	 @Bean
+ 	
+ 	 @Bean
      public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-         http.csrf(csrf -> csrf.disable())
-                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+          http.csrf(csrf -> csrf.disable())
+                  .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                 .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
-                     @Override
-                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                         CorsConfiguration cors = new CorsConfiguration();
-                         cors.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
-                         cors.setAllowedMethods(Collections.singletonList("*"));
-                         cors.setAllowCredentials(true);
-                         cors.setAllowedHeaders(Collections.singletonList("*"));
-                         cors.setExposedHeaders(Collections.singletonList("Authorization"));
-                         cors.setMaxAge(3600L);
-                         return cors;
-                     }
-                 }))
+                  .cors(cors -> cors.configurationSource(new CorsConfigurationSource() {
+                      @Override
+                      public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+                          CorsConfiguration cors = new CorsConfiguration();
+                          cors.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+                          cors.setAllowedMethods(Collections.singletonList("*"));
+                          cors.setAllowCredentials(true);
+                          cors.setAllowedHeaders(Collections.singletonList("*"));
+                          cors.setExposedHeaders(Collections.singletonList("Authorization"));
+                          cors.setMaxAge(3600L);
+                          return cors;
+                      }
+                  }))
 
 
-                 .authorizeHttpRequests(requests -> requests
-                         .requestMatchers("/login", "/register/**").permitAll()
-                         .anyRequest().authenticated())
-                 .addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class);
-return http.build();
-}
+
+                  .authorizeHttpRequests(requests -> requests
+                          .requestMatchers("/login", "/register/**", "/verifyEmail/**").permitAll()
+                          .anyRequest().authenticated())
+                  .addFilterBefore(new JWTAuthenticationFilter(authMgr), UsernamePasswordAuthenticationFilter.class);
+		 return http.build();
+	}
 }

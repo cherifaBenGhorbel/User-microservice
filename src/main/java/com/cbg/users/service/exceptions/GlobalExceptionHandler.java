@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorDetails>handleEmailAlreadyExistsException(
 			EmailAlreadyExistsException exception,
 			WebRequest webRequest){
-		
+
 		ErrorDetails errorDetails = new ErrorDetails(
 				LocalDateTime.now(),
 				exception.getMessage(),
@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 				);
 		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
-	
+
 	/*@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorDetails> handleGlobalException(Exception exception,
 			WebRequest webRequest){
@@ -36,6 +36,33 @@ public class GlobalExceptionHandler {
 				);
 		return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 	}/*/
+	@ExceptionHandler(ExpiredTokenException.class)
+	public ResponseEntity<ErrorDetails>
+	handleExpiredTokenException(ExpiredTokenException exception,
+			WebRequest webRequest){
+		ErrorDetails errorDetails = new ErrorDetails(
+				LocalDateTime.now(),
+				exception.getMessage(),
+				webRequest.getDescription(false),
+				"EXPIRED_TOKEN"
+				);
+		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+	
+	 @ExceptionHandler(InvalidTokenException.class)
+	 public ResponseEntity<ErrorDetails>
+	handleInvalidTokenException(InvalidTokenException exception,
+	WebRequest webRequest){
+	 ErrorDetails errorDetails = new ErrorDetails(
+	 LocalDateTime.now(),
+	 exception.getMessage(),
+	 webRequest.getDescription(false),
+	 "INVALID_TOKEN"
+	 );
+	 return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+	 }
+
+
 }
 
 
